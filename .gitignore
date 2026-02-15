@@ -1,0 +1,16 @@
+# 忽略编译出来的可执行文件
+*.exe
+*.out
+*.o
+
+# 忽略生成的图片（因为每次运行都会变，不需要版本控制）
+*.ppm
+
+# 忽略构建目录（如果你用 CMake）
+build/
+cmake-build-debug/
+
+# 忽略 IDE 的配置文件（VS Code, CLion 等）
+.vscode/
+.idea/
+*.swp
