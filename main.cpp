@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cstdio>
+#include "vec3.h"
 
 int main()
 {
     freopen("image.ppm", "w", stdout);
-    const int image_width = 200;
+    const int image_width = 2000;
     const int image_height = 100;
     std::cout << "P3\n"
               << image_width << ' ' << image_height << "\n255\n";
@@ -13,13 +14,15 @@ int main()
         std::cerr << "\rScanlines remaining" << j << ' ' << std::flush;
         for (int i = 0; i < image_width; i++)
         {
-            double r = double(i) / image_width;
-            double g = double(j) / image_height;
-            double b = 0.2;
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+            // double r = double(i) / image_width;
+            // double g = double(j) / image_height;
+            // double b = 0.2;
+            // int ir = static_cast<int>(255.999 * r);
+            // int ig = static_cast<int>(255.999 * g);
+            // int ib = static_cast<int>(255.999 * b);
+            // std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+            vec3 color(double(i) / image_width, double(j) / image_height, 0.2);
+            color.write_color(std::cout);
         }
     }
     std::cerr << "\nDone.\n";
