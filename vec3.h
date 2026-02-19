@@ -74,12 +74,33 @@ class vec3
 
         void write_color(std::ostream &out,int samples_per_pixel){
             double scale = 1.0 / samples_per_pixel;
-            double r = scale * e[0];
-            double g = scale * e[1];
-            double b = scale * e[2];
+            double r = sqrt(scale * e[0]);
+            double g = sqrt(scale * e[1]);
+            double b = sqrt(scale * e[2]);
             out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' ' << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' ' << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
         }
+
+        public:
+            inline static vec3 random()
+            {
+                return vec3(random_double(), random_double(), random_double());
+            }
+            inline static vec3 random(double min,double max)
+            {
+                return vec3(random_double(min,max), random_double(min,max), random_double(min,max));
+            }
 };
+
+vec3 random_in_unit_sphere()
+{
+    while(true)
+    {
+        vec3 p = vec3::random(-1.0, 1.0);
+        if(p.length_squared()>=1)
+            continue;
+        return p;
+    }
+}
 
 inline std::ostream& operator<<(std::ostream &out,const vec3& v)
 {
