@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <math.h>
+#include "rtweekend.h"
+
 class vec3
 {
     public:
@@ -42,7 +44,7 @@ class vec3
         {
             e[0] += v.e[0];
             e[1] += v.e[1];
-            e[2] += v.e[1];
+            e[2] += v.e[2];
             return *this;
         }
 
@@ -70,8 +72,12 @@ class vec3
             return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
         }
 
-        void write_color(std::ostream &out){
-            out << static_cast<int>(255.99 * e[0]) << ' '<< static_cast<int>(255.99 * e[1]) << ' '<< static_cast<int>(255.99 * e[2]) << '\n';
+        void write_color(std::ostream &out,int samples_per_pixel){
+            double scale = 1.0 / samples_per_pixel;
+            double r = scale * e[0];
+            double g = scale * e[1];
+            double b = scale * e[2];
+            out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' ' << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' ' << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
         }
 };
 

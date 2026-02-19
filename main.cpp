@@ -7,6 +7,7 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "rtweekend.h"
+#include "camera.h"
 
 // double hit_shape(const vec3 &center, double radius, const ray &r)
 // {
@@ -45,10 +46,12 @@ int main()
     freopen("image.ppm", "w", stdout);
     const int image_width = 200;
     const int image_height = 100;
+    const int samples_per_pixel = 100;
     vec3 lower_left_corner(-2.0, -1.0, -1.0);
     vec3 horizontal(4.0, 0.0, 0.0);
     vec3 vertical(0.0, 2.0, 0.0);
     vec3 origin(0.0, 0.0, 0.0);
+    camera cam;
 
     hittable_list world;
     world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5));
@@ -61,11 +64,16 @@ int main()
         std::cerr << "\rScanlines remaining" << j << ' ' << std::flush;
         for (int i = 0; i < image_width; i++)
         {
-            double u = double(i) / image_width;
-            double v = double(j) / image_height;
-            ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-            vec3 color = ray_color(r,world);
-            color.write_color(std::cout);
+            vec3 color(0.0, 0.0, 0.0);
+            for (int s = 0; s < samples_per_pixel;s++)
+            {
+            double u = double(i+random_double()) / image_width;
+            double v = double(j+random_double()) / image_height;
+            ray r = cam.get_ray(u, v);
+            color += ray_color(r,world);
+
+            }
+            color.write_color(std::cout,samples_per_pixel);
         }
     }
     std::cerr << "\nDone.\n";
