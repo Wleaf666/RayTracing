@@ -1,0 +1,27 @@
+#ifndef RAY_H
+#define RAY_H
+
+#include "vec3.h"
+
+class ray
+{
+
+    public:
+        vec3 orig;
+        vec3 dir;
+
+    public:
+        ray(){}
+        ray(const vec3& orign,const vec3 &direction)
+            :orig(orign),dir(direction)
+            {}
+            vec3 orign() const { return orig; }
+            vec3 direction() const { return dir; }
+
+            vec3 at(double t)
+            {
+                return orig + t * dir;
+            }
+};
+
+#endif
