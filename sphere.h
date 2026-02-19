@@ -34,7 +34,7 @@ bool sphere::hit(const ray &r,double t_min,double t_max,hit_record &rec)const
             rec.set_face_normal(r, outward_normal);
             return true;
         }
-        double temp = (-half_b +root) / a;
+        temp = (-half_b +root) / a;
         if (temp < t_max && temp > t_min)
         {
             rec.t = temp;
