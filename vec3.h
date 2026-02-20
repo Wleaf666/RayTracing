@@ -102,6 +102,14 @@ vec3 random_in_unit_sphere()
     }
 }
 
+vec3 random_unit_vector()
+{
+    double a = random_double(0, 2 * pi);
+    double z = random_double(-1,1);
+    double r = sqrt(1 - z * z);
+    return vec3(r * cos(a), r * sin(a), z);
+}
+
 inline std::ostream& operator<<(std::ostream &out,const vec3& v)
 {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
@@ -147,6 +155,11 @@ inline vec3 cross(const vec3 &v1, const vec3 &v2)
 inline vec3 unit_vector(vec3 v)
 {
     return v / v.length();
+}
+
+inline vec3 reflect(const vec3 &v,const vec3 &n)
+{
+    return v - 2 * dot(v, n) * n;
 }
 
 #endif

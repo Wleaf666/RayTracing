@@ -2,6 +2,9 @@
 #define HITTABLE_H
 
 #include "ray.h"
+#include "memory"
+
+class material;
 
 struct hit_record
 {
@@ -9,6 +12,7 @@ struct hit_record
     vec3 normal; //法向量
     double t;
     bool front_face;
+    std::shared_ptr<material> mat_ptr;
 
     inline void set_face_normal(const ray &r,const vec3 & outward_normal)
     {
