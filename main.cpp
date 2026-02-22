@@ -51,8 +51,8 @@ vec3 ray_color(const ray &r, const hittable &world,int depth)
 int main()
 {
     freopen("image.ppm", "w", stdout);
-    const int image_width = 200;
-    const int image_height = 100;
+    const int image_width = 600;
+    const int image_height = 300;
     const int samples_per_pixel = 100;
     vec3 lower_left_corner(-2.0, -1.0, -1.0);
     vec3 horizontal(4.0, 0.0, 0.0);
@@ -60,11 +60,15 @@ int main()
     vec3 origin(0.0, 0.0, 0.0);
     int max_depth = 50;
     double aspect_ratio = double(image_width) / image_height;
-    camera cam(45,aspect_ratio,vec3(-2,2,1),vec3(0,0,-1),vec3(0,1,0));
+    vec3 lookfrom(2, 2, 1);
+    vec3 lookat(0, 0, -1);
+    vec3 vup(0, 1, 0);
+    auto dist_to_focus = (lookfrom - lookat).length();
+    camera cam(60, aspect_ratio, vec3(2, 2, 1), vec3(0, 0, -1), vec3(0, 1, 0), 0.2, (lookfrom - lookat).length());
 
     hittable_list world;
     world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5, std::make_shared<lambertian>(vec3(0.7, 0.3, 0.3))));
-    world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100,std::make_shared<lambertian>(vec3(0.8,0.8,0.0))));
+    world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100,std::make_shared<lambertian>(vec3(0.5,0.5,0.5))));
 
     world.add(std::make_shared<sphere>(vec3(1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.6, 0.2), 0.3)));
     // world.add(std::make_shared<sphere>(vec3(-1, 0, -1), 0.5, std::make_shared<dielectric>(1.5)));
