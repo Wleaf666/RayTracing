@@ -59,15 +59,18 @@ int main()
     vec3 vertical(0.0, 2.0, 0.0);
     vec3 origin(0.0, 0.0, 0.0);
     int max_depth = 50;
-    camera cam;
+    double aspect_ratio = double(image_width) / image_height;
+    camera cam(45,aspect_ratio,vec3(-2,2,1),vec3(0,0,-1),vec3(0,1,0));
 
     hittable_list world;
     world.add(std::make_shared<sphere>(vec3(0, 0, -1), 0.5, std::make_shared<lambertian>(vec3(0.7, 0.3, 0.3))));
     world.add(std::make_shared<sphere>(vec3(0, -100.5, -1), 100,std::make_shared<lambertian>(vec3(0.8,0.8,0.0))));
 
     world.add(std::make_shared<sphere>(vec3(1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.6, 0.2), 0.3)));
-    world.add(std::make_shared<sphere>(vec3(-1, 0, -1), 0.5, std::make_shared<metal>(vec3(0.8, 0.8, 0.8), 1.0)));
+    // world.add(std::make_shared<sphere>(vec3(-1, 0, -1), 0.5, std::make_shared<dielectric>(1.5)));
 
+    world.add(std::make_shared<sphere>(vec3(-1, 0, -1), 0.5, std::make_shared<dielectric>(1.5)));
+    world.add(std::make_shared<sphere>(vec3(-1, 0, -1), -0.45, std::make_shared<dielectric>(1.5)));
     std::cout << "P3\n"
               << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height - 1; j >= 0; j--)
