@@ -4,6 +4,7 @@
 #include "hittable.h"
 #include <memory>
 #include <vector>
+#include "rtweekend.h"
 
 class hittable_list : public hittable{
     public:
@@ -15,18 +16,18 @@ class hittable_list : public hittable{
         void clear() { objects.clear(); }
         void add(std::shared_ptr<hittable> object) { objects.push_back(object); }
 
-        virtual bool hit(const ray &r, double tmin, double tmax, hit_record &rec) const;
+        virtual bool hit(const ray &r, interval ray_t,hit_record &rec) const;
 };
 
-bool hittable_list::hit(const ray &r,double t_min,double t_max,hit_record &rec)const
+bool hittable_list::hit(const ray &r,interval ray_t,hit_record &rec)const
 {
     hit_record temp_rec;
     bool hit_anything = false;
-    auto closest_so_far = t_max;
+    auto closest_so_far = ray_t.max;
     
     for(const auto &object:objects)
     {
-        if(object->hit(r,t_min,closest_so_far,temp_rec))
+        if(object->hit(r,interval(ray_t.min,closest_so_far),temp_rec))
         {
             hit_anything = true;
             closest_so_far = temp_rec.t;

@@ -13,10 +13,10 @@ class sphere:public hittable{
     public:
         sphere(){}
         sphere(vec3 cen, double r,std::shared_ptr<material> m ): center(cen), radius(r),mat_ptr(m) {}
-        virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const;
+        virtual bool hit(const ray &r, interval ray_t, hit_record & rec) const;
 };
 
-bool sphere::hit(const ray &r,double t_min,double t_max,hit_record &rec)const
+bool sphere::hit(const ray &r,interval ray_t,hit_record &rec)const
 {
     vec3 oc = r.origin() - center;
     auto a = r.direction().length_squared();
@@ -27,7 +27,7 @@ bool sphere::hit(const ray &r,double t_min,double t_max,hit_record &rec)const
     {
         double root = sqrt(discriminant);
         double temp = (-half_b - root) / a;
-        if(temp<t_max&&temp>t_min)
+        if(ray_t.surrounds(temp))
         {
             rec.t = temp;
             rec.p = r.at(rec.t);
@@ -37,7 +37,7 @@ bool sphere::hit(const ray &r,double t_min,double t_max,hit_record &rec)const
             return true;
         }
         temp = (-half_b +root) / a;
-        if (temp < t_max && temp > t_min)
+        if (ray_t.surrounds(temp) )
         {
             rec.t = temp;
             rec.p = r.at(rec.t);

@@ -9,19 +9,21 @@ class ray
     public:
         vec3 orig;
         vec3 dir;
+        double tm;
 
     public:
         ray(){}
-        ray(const vec3& orign,const vec3 &direction)
-            :orig(orign),dir(direction)
+        ray(const vec3& orign,const vec3 &direction,double time=1.0)
+            :orig(orign),dir(direction),tm(time)
             {}
-            vec3 origin() const { return orig; }
-            vec3 direction() const { return dir; }
+        vec3 origin() const { return orig; }
+        vec3 direction() const { return dir; }
+        double time() const { return tm; }
 
-            vec3 at(double t) const
-            {
-                return orig + t * dir;
-            }
+        vec3 at(double t) const
+        {
+            return orig + t * dir;
+        }
 };
 
 #endif

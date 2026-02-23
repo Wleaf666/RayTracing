@@ -4,6 +4,8 @@
 #include "ray.h"
 #include "vec3.h"
 #include "hittable.h"
+#include "interval.h"
+
 
 class material
 {

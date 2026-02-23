@@ -71,6 +71,11 @@ class vec3
         {
             return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
         }
+        bool near_zero()const
+        {
+            double s = 1e-8;
+            return (fabs(e[0]) < s) && (fabs(e[1]) < s)&&(fabs(e[2]) < s);
+        }
 
         void write_color(std::ostream &out,int samples_per_pixel){
             double scale = 1.0 / samples_per_pixel;
