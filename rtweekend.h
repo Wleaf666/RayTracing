@@ -37,6 +37,10 @@ inline double clamp(double x,double min,double max)
     return x;
 }
 
+inline int random_int(int left,int right)
+{
+    return static_cast<int>(random_double(left, right + 1.0));
+}
 
 
 #endif

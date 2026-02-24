@@ -9,6 +9,8 @@ public:
     interval() : min(+infinity), max{-infinity} {}
     interval(double _min, double _max) : min(_min), max(_max) {}
 
+    interval (const interval &a,const interval &b):min(ffmin(a.min,b.min)),max(ffmax(a.max,b.max)){}
+
     bool contains(double x) const
     {
         return min <= x && x < max;

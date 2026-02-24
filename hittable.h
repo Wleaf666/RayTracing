@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "memory"
 #include "interval.h"
+#include "aabb.h"
 class material;
 
 struct hit_record
@@ -24,6 +25,7 @@ struct hit_record
 class hittable{
     public : 
         virtual bool hit(const ray &r, interval ray_t,hit_record &rec) const = 0;
+        virtual aabb bounding_box() const = 0;
 };
 
 #endif

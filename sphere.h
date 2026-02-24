@@ -3,6 +3,7 @@
 
 #include "vec3.h"
 #include "hittable.h"
+#include "aabb.h"
 
 class sphere:public hittable{
     public:
@@ -11,15 +12,26 @@ class sphere:public hittable{
         std::shared_ptr<material> mat_ptr;
         bool is_moving;
         vec3 center_vec;
+        aabb bbox;
 
     public:
         sphere(){}
-        sphere(vec3 cen, double r,std::shared_ptr<material> m ): center0(cen), radius(r),mat_ptr(m) ,is_moving(false){}
+        sphere(vec3 cen, double r,std::shared_ptr<material> m ): center0(cen), radius(r),mat_ptr(m) ,is_moving(false)
+        {
+            vec3 r_vec = vec3(r, r, r);
+            bbox = aabb(center0 + r_vec, center0 - r_vec);
+        }
         sphere(vec3 cen1, vec3 cen2, double r, std::shared_ptr<material> m) : center0(cen1), radius(r), mat_ptr(m), is_moving(true) 
         { 
-            center_vec = cen2 - cen1; 
+            center_vec = cen2 - cen1;
+            vec3 r_vec = vec3(r, r, r);
+            aabb box0 = aabb(cen1 + r_vec, cen1 - r_vec);
+            aabb box1 = aabb(cen2 + r_vec, cen2 - r_vec);
+            bbox = aabb(box0, box1);
         }
         virtual bool hit(const ray &r, interval ray_t, hit_record & rec) const;
+
+        aabb bounding_box()const { return bbox; }
 
         vec3 center_in_time(double time)const
         {
