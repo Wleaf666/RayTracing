@@ -13,10 +13,10 @@ class camera{
         vec3 lookat=vec3(0, 0, 0);
         vec3 vup=vec3(0, 1, 0);
         double aspect_ratio = 16.0/9;
-        int image_width = 160;
-        int image_height = 90;
+        int image_width = 480;
+        int image_height = 270;
         int max_depth = 50;
-        int samples_per_pixel = 20;
+        int samples_per_pixel = 80;
         double apetrure = 0.1;
         double focus_dist = 10.0;
 
@@ -36,7 +36,8 @@ class camera{
         {
             vec3 rd = lens_radius * random_in_unit_disk();
             vec3 offset = rd.x() * u + rd.y() * v;
-            return ray(origin+offset, lower_left_corner+s*horizontal + t*vertical  - origin-offset);
+            double ray_time = random_double();
+            return ray(origin+offset, lower_left_corner+s*horizontal + t*vertical  - origin-offset,ray_time);
         }
         vec3 ray_color(const ray &r, const hittable &world, int depth)
         {
@@ -80,7 +81,7 @@ class camera{
             }
             std::cerr << "\nDone.\n";
         }
-        void cam_init()
+        void init()
         {
             origin = lookfrom;
             lens_radius = apetrure / 2;

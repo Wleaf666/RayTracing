@@ -31,8 +31,9 @@ hittable_list random_scene()
                 {
                     // diffuse
                     auto albedo = vec3::random() * vec3::random();
+                    vec3 center2 = center + vec3(0, random_double(0, 0.5), 0);
                     world.add(
-                        make_shared<sphere>(center, 0.2, make_shared<lambertian>(albedo)));
+                        make_shared<sphere>(center,center2, 0.2, make_shared<lambertian>(albedo)));
                 }
                 else if (choose_mat < 0.95)
                 {
@@ -67,7 +68,7 @@ hittable_list random_scene()
 int main()
 {
     camera cam;
-    cam.cam_init();
+    cam.init();
     hittable_list world=random_scene();
     cam.render(world);
 
