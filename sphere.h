@@ -4,6 +4,7 @@
 #include "vec3.h"
 #include "hittable.h"
 #include "aabb.h"
+#include "cmath"
 
 class sphere:public hittable{
     public:
@@ -37,6 +38,15 @@ class sphere:public hittable{
         {
             return center0 + time * center_vec;
         }
+
+        static void get_sphere_uv(const vec3 &p,double &u,double &v)
+        {
+            double theta = acos(-p.y());
+            double phi = atan2(-p.z(), p.x()) + pi;
+
+            u = phi / (2 * pi);
+            v = theta / pi;
+        }
 };
 
 bool sphere::hit(const ray &r,interval ray_t,hit_record &rec)const
@@ -58,6 +68,7 @@ bool sphere::hit(const ray &r,interval ray_t,hit_record &rec)const
             vec3 outward_normal = (rec.p - center) / radius;
             rec.set_face_normal(r, outward_normal);
             rec.mat_ptr = mat_ptr;
+            get_sphere_uv(outward_normal, rec.u, rec.v);
             return true;
         }
         temp = (-half_b +root) / a;
@@ -68,6 +79,7 @@ bool sphere::hit(const ray &r,interval ray_t,hit_record &rec)const
             vec3 outward_normal = (rec.p - center) / radius;
             rec.set_face_normal(r, outward_normal);
             rec.mat_ptr = mat_ptr;
+            get_sphere_uv(outward_normal, rec.u, rec.v);
             return true;
         }
     }

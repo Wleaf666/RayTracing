@@ -5,6 +5,7 @@
 #include "vec3.h"
 #include "hittable.h"
 #include "interval.h"
+#include "texture.h"
 
 
 class material
@@ -16,10 +17,12 @@ class material
 class lambertian : public material
 {
     public:
-        vec3 albedo;
+        std::shared_ptr<texture> albedo;
+
     public:
         lambertian() {};
-        lambertian(const vec3 &a) : albedo(a) {}
+        lambertian(const vec3 &a) : albedo(std::make_shared<solid_color>(a)) {}
+        lambertian(std::shared_ptr<texture> a):albedo(a){}
 
         virtual bool scatter(const ray &r_in, const hit_record &rec, vec3 &attenuation, ray &scattered)const
         {
@@ -29,7 +32,7 @@ class lambertian : public material
                 scatter_direction = rec.normal;
             }
             scattered = ray(rec.p, scatter_direction,r_in.time());
-            attenuation = albedo;
+            attenuation = albedo->value(rec.u,rec.v,rec.p);
             return true;
         }
 };

@@ -16,8 +16,10 @@ hittable_list random_scene()
     using namespace std;
     hittable_list world;
 
+    auto checker = std::make_shared<checker_texture>(0.32, vec3(.2, .3, .1), vec3(.9, .9,.9));
+
     world.add(make_shared<sphere>(
-        vec3(0, -1000, 0), 1000, make_shared<lambertian>(vec3(0.5, 0.5, 0.5))));
+        vec3(0, -1000, 0), 1000, make_shared<lambertian>(checker)));
 
     int i = 1;
     for (int a = -11; a < 11; a++)

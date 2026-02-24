@@ -14,6 +14,8 @@ struct hit_record
     double t;
     bool front_face;
     std::shared_ptr<material> mat_ptr;
+    double u;
+    double v;
 
     inline void set_face_normal(const ray &r,const vec3 & outward_normal)
     {
