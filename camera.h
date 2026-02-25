@@ -13,8 +13,8 @@ class camera{
         vec3 lookat=vec3(0, 0, 0);
         vec3 vup=vec3(0, 1, 0);
         double aspect_ratio = 16.0/9;
-        int image_width = 320;
-        int image_height = 180;
+        int image_width = 1600;
+        int image_height = 900;
         int max_depth = 50;
         int samples_per_pixel = 80;
         double apetrure = 0.1;
@@ -60,6 +60,7 @@ class camera{
         }
         void render(const hittable &world)
         {
+            init();
             freopen("image.ppm", "w", stdout);
             std::cout << "P3\n"
               << image_width << ' ' << image_height << "\n255\n";

@@ -34,9 +34,9 @@ hittable_list random_scene()
                 {
                     // diffuse
                     auto albedo = vec3::random() * vec3::random();
-                    vec3 center2 = center + vec3(0, random_double(0, 0.5), 0);
+                    // vec3 center2 = center + vec3(0, random_double(0, 0.5), 0);
                     world.add(
-                        make_shared<sphere>(center,center2, 0.2, make_shared<lambertian>(albedo)));
+                        make_shared<sphere>(center, 0.2, make_shared<lambertian>(albedo)));
                 }
                 else if (choose_mat < 0.95)
                 {
@@ -65,15 +65,60 @@ hittable_list random_scene()
     world = hittable_list(make_shared<bvh_node>(world));
     return world;
 }
+void two_spheres()
+{
+    using namespace std;
+    hittable_list world;
 
+    auto checker = make_shared<checker_texture>(0.4, vec3(.2, .3, .1), vec3(.9, .9, .9));
 
+    world.add(make_shared<sphere>(vec3(0, -10, 0), 10, make_shared<lambertian>(checker)));
+    world.add(make_shared<sphere>(vec3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 20;
+    cam.lookfrom = vec3(13, 2, 3);
+    cam.lookat = vec3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.apetrure = 0.1;
+
+    cam.render(world);
+}
+void earth()
+{
+    using namespace std;
+    auto earth_texture = make_shared<image_texture>("earthmap.jpg");
+    auto earth_surface = make_shared<lambertian>(earth_texture);
+    auto globe = make_shared<sphere>(vec3(0, 0, 0), 2, earth_surface);
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 20;
+    cam.lookfrom = vec3(0, 0, 12);
+    cam.lookat = vec3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.apetrure = 0;
+
+    cam.render(hittable_list(globe));
+}
 
 int main()
 {
-    camera cam;
-    cam.init();
-    hittable_list world=random_scene();
-    cam.render(world);
+    // camera cam;
+    // hittable_list world=random_scene();
+    // cam.render(world);
+    earth();
 
     return 0;
 }

@@ -3,6 +3,7 @@
 
 #include "rtweekend.h"
 #include "vec3.h"
+#include "rtw_stb_image.h"
 
 class texture
 {
@@ -48,6 +49,31 @@ class checker_texture:public texture
         }
 
 
+};
+
+class image_texture : public texture
+{
+    private:
+        rtw_image image;
+
+    public:
+        image_texture(const char *filename) : image(filename){}
+
+
+        vec3 value(double u,double v,const vec3 &p)const override
+        {
+            if(image.height()<=0)
+                return vec3(0, 1, 1);
+            u = interval(0, 1) . clamp(u);
+            v = 1.00 - interval(0, 1).clamp(v);
+
+            int i = static_cast<int>(u * image.width());
+            int j = static_cast<int>(v * image.height());
+            auto pixle = image.pixel_data(i,j);
+
+            double color_scale = 1.0 / 255.0;
+            return vec3(color_scale * pixle[0], color_scale * pixle[1], color_scale * pixle[2]);
+        }
 };
 
 #endif
