@@ -112,13 +112,37 @@ void earth()
 
     cam.render(hittable_list(globe));
 }
+void two_perlin_spheres()
+{
+    using namespace std;
+    hittable_list world;
+
+    auto pertext = make_shared<noise_texture>();
+    world.add(make_shared<sphere>(vec3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+    world.add(make_shared<sphere>(vec3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 20;
+    cam.lookfrom = vec3(13, 2, 3);
+    cam.lookat = vec3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.apetrure=0;
+
+    cam.render(world);
+}
 
 int main()
 {
     // camera cam;
     // hittable_list world=random_scene();
     // cam.render(world);
-    earth();
+    two_perlin_spheres();
 
     return 0;
 }

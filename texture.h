@@ -4,6 +4,7 @@
 #include "rtweekend.h"
 #include "vec3.h"
 #include "rtw_stb_image.h"
+#include "perlin.h"
 
 class texture
 {
@@ -74,6 +75,18 @@ class image_texture : public texture
             double color_scale = 1.0 / 255.0;
             return vec3(color_scale * pixle[0], color_scale * pixle[1], color_scale * pixle[2]);
         }
+};
+
+class noise_texture:public texture
+{
+    private:
+        perlin noise;
+    public:
+        noise_texture() {};
+    vec3 value(double u ,double v,const vec3 &p)const override
+    {
+        return noise.noise(p)*vec3(1,1,1);
+    }
 };
 
 #endif
