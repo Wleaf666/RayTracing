@@ -12,6 +12,10 @@ class material
 {
     public:
         virtual bool scatter(const ray &r_in, const hit_record &rec, vec3 &attenuation, ray &scattered) const = 0;
+        virtual vec3 emitted(double u,double v,const vec3& p)const
+        {
+            return vec3(0, 0, 0);
+        }
 };
 
 class lambertian : public material
@@ -40,17 +44,17 @@ class lambertian : public material
 class metal : public material
 {
     public:
-        vec3 albedo;
+        std::shared_ptr<texture> albedo;
         double fuzz;
 
     public:
         metal(){}
-        metal(const vec3 &a,double f):albedo(a),fuzz(f<1?f:1){}
+        metal(const vec3 &a,double f):albedo(std::make_shared<solid_color>(a)),fuzz(f<1?f:1){}
         virtual bool scatter(const ray &r_in, const hit_record &rec, vec3 &attenuation, ray &scattered) const
         {
             vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
             scattered = ray(rec.p, reflected+fuzz*random_in_unit_sphere(),r_in.time());
-            attenuation = albedo;
+            attenuation = albedo->value(rec.u,rec.v,rec.p);
             return (dot(scattered.direction(),rec.normal)>0);
         }
 };
@@ -88,6 +92,25 @@ class dielectric : public material
             vec3 refracted = refract(unit_direction, rec.normal, etai_over_etat);
             scattered = ray(rec.p, refracted,r_in.time());
             return true;
+        }
+};
+
+class diffuse_light:public material
+{
+    private:
+        std::shared_ptr<texture> emit_mat;
+    public:
+        diffuse_light(std::shared_ptr<texture> a):emit_mat(a){}
+        diffuse_light(vec3 color):emit_mat(std::make_shared<solid_color>(color)){}
+
+        bool scatter(const ray& r_in,const hit_record& rec,vec3& attenuation,ray& scattered)const override
+        {
+            return false;
+        }
+
+        vec3 emitted(double u,double v,const vec3& p)const override
+        {
+            return emit_mat->value(u, v, p);
         }
 };
 

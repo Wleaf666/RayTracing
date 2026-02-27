@@ -19,6 +19,7 @@ class camera{
         int samples_per_pixel = 80;
         double apetrure = 0.1;
         double focus_dist = 10.0;
+        vec3 background;
 
     private:
         vec3 origin;
@@ -28,7 +29,9 @@ class camera{
         vec3 u, v, w;
         double lens_radius;
 
-        public : camera()
+
+    public:
+        camera()
         {
   
         }
@@ -44,19 +47,16 @@ class camera{
 
             hit_record rec;
             if (depth <= 0)
-                return vec3(1, 0, 0);
-            if (world.hit(r, interval(0.001,infinity), rec))
-            {
-                ray scattered;
-                vec3 attenuation;
-                if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-                    return attenuation * ray_color(scattered, world, depth - 1);
-                return vec3(0, 0, 0);
-            }
-
-            vec3 unit_direction = unit_vector(r.direction());
-            double t = 0.5 * (unit_direction.y() + 1.0);
-            return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
+                return vec3(1,1, 1);
+            if (!world.hit(r, interval(0.001, infinity), rec))
+                return background;
+            ray scattered;
+            vec3 attenuation;
+            vec3 color_from_emission = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+            if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+                return color_from_emission;
+            vec3 color_from_scatter = attenuation * ray_color(scattered, world,depth-1);
+            return color_from_emission + color_from_scatter;
         }
         void render(const hittable &world)
         {
