@@ -13,8 +13,8 @@ class camera{
         vec3 lookat=vec3(0, 0, 0);
         vec3 vup=vec3(0, 1, 0);
         double aspect_ratio = 16.0/9;
-        int image_width = 320;
-        int image_height = 180;
+        int image_width = 1600;
+        int image_height = 909;
         int max_depth = 50;
         int samples_per_pixel = 80;
         double apetrure = 0.1;

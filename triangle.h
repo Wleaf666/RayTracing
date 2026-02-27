@@ -1,14 +1,14 @@
-#ifndef QUAD_H
-#define QUAD_H
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
 
 #include "hittable.h"
 #include "rtweekend.h"
-#include "vec3.h"
+#include "material.h"
 
-class quad:public hittable
+class triangle:public hittable
 {
     private:
-        vec3 Q;
+        vec3 P;
         vec3 u, v;
         aabb bbox;
         std::shared_ptr<material> mat_ptr;
@@ -17,36 +17,33 @@ class quad:public hittable
         vec3 w;
 
     public:
-        quad(const vec3& _Q,const vec3 _u,const vec3 _v,std::shared_ptr<material> _mat_ptr):Q(_Q),u(_u),v(_v),mat_ptr(_mat_ptr)
+        triangle(const vec3& _P,const vec3& _u,const vec3& _v,std::shared_ptr<material> _mat_ptr):P(_P),u(_u),v(_v),mat_ptr(_mat_ptr)
         {
-            
             auto n = cross(u, v);
             normal = unit_vector(n);
-            D = dot(normal, Q);
+            D = dot(normal, P);
             w = n / dot(n, n);
             set_bounding_box();
         }
-
         virtual void set_bounding_box()
         {
-            aabb bbox1(Q, Q + u + v);
-            aabb bbox2(Q + u, Q + v);
-            bbox = aabb(bbox1, bbox2).pad();
+            aabb box_u(P, P + u);
+            aabb box_v(P + v, P + v);
+            bbox = aabb(box_u, box_v).pad();
         }
-
-        bool hit(const ray& r,interval ray_t,hit_record& rec)const override
+        bool hit(const ray &r, interval ray_t, hit_record &rec) const override
         {
             auto denom = dot(normal, r.direction());
-            if(abs(denom)<1e-8)
+            if (abs(denom) < 1e-8)
                 return false;
             auto t = (D - dot(normal, r.origin())) / denom;
-            if(!ray_t.contains(t))
+            if (!ray_t.contains(t))
                 return false;
             auto intersection = r.at(t);
-            vec3 planar_hitpt_vector = intersection - Q;
+            vec3 planar_hitpt_vector = intersection - P;
             auto alpha = dot(w, cross(planar_hitpt_vector, v));
             auto beta = dot(w, cross(u, planar_hitpt_vector));
-            if(!is_interior(alpha,beta,rec))
+            if (!is_interior(alpha, beta, rec))
                 return false;
 
             rec.t = t;
@@ -56,13 +53,14 @@ class quad:public hittable
             return true;
         }
 
-        virtual bool is_interior(double a,double b,hit_record& rec)const
+        bool is_interior(double alpha,double beta,hit_record& rec)const
         {
-            if((a<0)||(1<a)||(b<0)||(1<b))
+            if(alpha<0||beta<0||alpha>1||beta>1||alpha+beta>1)
                 return false;
-            rec.u = a;
-            rec.v = b;
+            rec.u = alpha;
+            rec.v = beta;
             return true;
+
         }
 
         aabb bounding_box()const

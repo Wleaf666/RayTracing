@@ -11,6 +11,7 @@
 #include "material.h"
 #include "bvh.h"
 #include "quad.h"
+#include "triangle.h"
 
 hittable_list random_scene()
 {
@@ -147,9 +148,9 @@ void quads()
     // Materials
     auto left_red = make_shared<lambertian>(vec3(1.0, 0.2, 0.2));
     auto back_green = make_shared<lambertian>(make_shared<image_texture>("b_632871a556bea3c3aa30a7c3e92bd9f9.jpg"));
-    auto right_blue = make_shared<lambertian>(vec3(0.2, 0.2, 1.0));
-    auto upper_orange = make_shared<lambertian>(make_shared<image_texture>("b_f26c89bb915f83a77b5f3cfe9d0dd28e.jpg"));
-    auto lower_teal = make_shared<lambertian>(vec3(0.2, 0.8, 0.8));
+    auto right_blue = make_shared<lambertian>(make_shared<image_texture>("b_f26c89bb915f83a77b5f3cfe9d0dd28e.jpg"));
+    auto upper_orange = make_shared<lambertian>(make_shared<image_texture>("b_8f618d15ccc455720621e411853462a4.jpg"));
+    auto lower_teal = make_shared<lambertian>(make_shared<image_texture>("b_fad585d95e4a99c1ef1fb0930a09cfbe.jpg"));
 
     // Quads
     world.add(make_shared<quad>(vec3(-3, -2, 5), vec3(0, 0, -4), vec3(0, 4, 0), left_red));
@@ -171,6 +172,23 @@ void quads()
 
     cam.apetrure = 0;
 
+    cam.render(world);
+}
+
+void triangles()
+{
+    hittable_list world;
+    using namespace std;
+
+    vec3 center = vec3(-2, -sqrt(3), -sqrt(3));
+    vec3 u = vec3(3, 3 * sqrt(3), 0);
+    vec3 v = vec3(6, 0, 0);
+    world.add(make_shared<triangle>(center, u, v, make_shared<lambertian>(vec3(1.0, 0.2, 0.2))));
+
+    camera cam;
+    cam.lookfrom = vec3(0, 0, -9);
+    cam.lookat = vec3(0, 0, -sqrt(3));
+    cam.vfov = 120;
     cam.render(world);
 }
 
