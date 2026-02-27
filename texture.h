@@ -81,11 +81,14 @@ class noise_texture:public texture
 {
     private:
         perlin noise;
+        double scale;
+
     public:
         noise_texture() {};
+        noise_texture(double _scale):scale(_scale){}
     vec3 value(double u ,double v,const vec3 &p)const override
     {
-        return noise.noise(p)*vec3(1,1,1);
+        return 0.5*(1.0+noise.noise(scale*p))*vec3(1,1,1);
     }
 };
 

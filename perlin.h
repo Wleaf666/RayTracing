@@ -9,7 +9,7 @@ class perlin
 {
     private:
         static const int point_count = 256;
-        double *ranfloat;
+        vec3* ranvec;
         int *perm_x;
         int *perm_y;
         int *perm_z;
@@ -36,7 +36,7 @@ class perlin
             }
         }
 
-        static double trilinear_interp(double c[2][2][2],double u,double v,double w)
+        static double trilinear_interp(vec3 c[2][2][2],double u,double v,double w)
         {
             double accum = 0.0;
             for (int i = 0; i < 2;i++)
@@ -45,7 +45,8 @@ class perlin
                 {
                     for (int k = 0; k < 2;k++)
                     {
-                        accum += (i * u + (1 - i) * (1 - u)) * (j * v + (1 - j) * (1 - v)) * (k * w + (1 - k) * (1 - w))*c[i][j][k] ;
+                        vec3 weight_v(u - i, v - j, w - k);
+                        accum += (i * u + (1 - i) * (1 - u)) * (j * v + (1 - j) * (1 - v)) * (k * w + (1 - k) * (1 - w)) * dot(weight_v, c[i][j][k]);
                     }
                 }
             }
@@ -55,10 +56,10 @@ class perlin
         public:
             perlin()
             {
-                ranfloat = new double[point_count];
+                ranvec = new vec3[point_count];
                 for (int i = 0; i < point_count;i++)
                 {
-                    ranfloat[i] = random_double();
+                    ranvec[i] = unit_vector(vec3::random(-1, 1));
                 }
 
                 perm_x = perlin_generate_perm();
@@ -68,10 +69,10 @@ class perlin
 
             ~perlin()
             {
-                delete[] ranfloat;
                 delete[] perm_x;
                 delete[] perm_y;
                 delete[] perm_z;
+                delete[] ranvec;
             }
 
             double noise(const vec3& p)const
@@ -87,7 +88,7 @@ class perlin
                 int i = static_cast<int>(floor(p.x()));
                 int j = static_cast<int>(floor(p.y()));
                 int k = static_cast<int>(floor(p.z()));
-                double c[2][2][2];
+                vec3 c[2][2][2];
 
                 for (int di = 0; di < 2; di++)
                 {
@@ -95,7 +96,7 @@ class perlin
                     {
                         for (int dk = 0; dk < 2;dk++)
                         {
-                            c[di][dj][dk] = ranfloat[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^ perm_z[(k + dk) & 255]];
+                            c[di][dj][dk] = ranvec[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^ perm_z[(k + dk) & 255]];
                         }
                     }
                 }

@@ -117,7 +117,7 @@ void two_perlin_spheres()
     using namespace std;
     hittable_list world;
 
-    auto pertext = make_shared<noise_texture>();
+    auto pertext = make_shared<noise_texture>(20);
     world.add(make_shared<sphere>(vec3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
     world.add(make_shared<sphere>(vec3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
