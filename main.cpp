@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "material.h"
 #include "bvh.h"
+#include "quad.h"
 
 hittable_list random_scene()
 {
@@ -137,12 +138,48 @@ void two_perlin_spheres()
     cam.render(world);
 }
 
+void quads()
+{
+    using namespace std;
+
+    hittable_list world;
+
+    // Materials
+    auto left_red = make_shared<lambertian>(vec3(1.0, 0.2, 0.2));
+    auto back_green = make_shared<lambertian>(make_shared<image_texture>("b_632871a556bea3c3aa30a7c3e92bd9f9.jpg"));
+    auto right_blue = make_shared<lambertian>(vec3(0.2, 0.2, 1.0));
+    auto upper_orange = make_shared<lambertian>(make_shared<image_texture>("b_f26c89bb915f83a77b5f3cfe9d0dd28e.jpg"));
+    auto lower_teal = make_shared<lambertian>(vec3(0.2, 0.8, 0.8));
+
+    // Quads
+    world.add(make_shared<quad>(vec3(-3, -2, 5), vec3(0, 0, -4), vec3(0, 4, 0), left_red));
+    world.add(make_shared<quad>(vec3(-2, -2, 0), vec3(4, 0, 0), vec3(0, 4, 0), back_green));
+    world.add(make_shared<quad>(vec3(3, -2, 1), vec3(0, 0, 4), vec3(0, 4, 0), right_blue));
+    world.add(make_shared<quad>(vec3(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange));
+    world.add(make_shared<quad>(vec3(-2, -3, 5), vec3(4, 0, 0), vec3(0, 0, -4), lower_teal));
+
+    camera cam;
+
+    cam.aspect_ratio = 1.0;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+
+    cam.vfov = 80;
+    cam.lookfrom = vec3(0, 0, 9);
+    cam.lookat = vec3(0, 0, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.apetrure = 0;
+
+    cam.render(world);
+}
+
 int main()
 {
     // camera cam;
     // hittable_list world=random_scene();
     // cam.render(world);
-    two_perlin_spheres();
+    quads();
 
     return 0;
 }

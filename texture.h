@@ -88,7 +88,10 @@ class noise_texture:public texture
         noise_texture(double _scale):scale(_scale){}
     vec3 value(double u ,double v,const vec3 &p)const override
     {
-        return 0.5*(1.0+noise.noise(scale*p))*vec3(1,1,1);
+        // return 0.5*(1.0+noise.noise(scale*p))*vec3(1,1,1);
+        // return noise.turb(scale * p) * vec3(1, 1, 1);
+        auto s = scale * p;
+        return 0.5 * (1 + sin(s.z() + 10 * noise.turb(s))) * vec3(1.0, 1.0, 1.0);
     }
 };
 

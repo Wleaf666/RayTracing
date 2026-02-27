@@ -30,6 +30,16 @@ public:
         return x;
     }
 
+    double size()
+    {
+        return max - min;
+    }
+
+    interval expand(double delta)
+    {
+        return interval(min - delta, max + delta);
+    }
+
     static const interval empty, universe;
 };
 
