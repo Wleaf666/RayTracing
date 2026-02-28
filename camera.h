@@ -86,7 +86,7 @@ class camera{
         {
             origin = lookfrom;
             lens_radius = apetrure / 2;
-            image_height = image_width * aspect_ratio;
+            image_height = static_cast<int> (image_width / aspect_ratio);
 
             double theta = degrees_to_radians(vfov);
             double half_height = tan(theta / 2);

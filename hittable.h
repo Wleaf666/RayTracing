@@ -51,7 +51,7 @@ class translate: public hittable
         bool hit(const ray& r,interval ray_t,hit_record& rec)const override
         {
             ray offset_r = ray(r.origin() - offset, r.direction(), r.time());
-            if(!object->hit(r,ray_t,rec))
+            if(!object->hit(offset_r,ray_t,rec))
                 return false;
             rec.p += offset;
             return true;
@@ -137,4 +137,6 @@ class rotate_y:public hittable
             return bbox;
         }
 };
+
+
 #endif
