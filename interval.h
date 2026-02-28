@@ -47,4 +47,15 @@ const interval interval::empty(+infinity, -infinity);
 
 const interval interval::universe(-infinity, +infinity);
 
+
+inline interval operator+(const interval& ival,double offset)
+{
+    return interval(ival.min + offset, ival.max + offset);
+}
+
+inline interval operator+(double offset, const interval &ival)
+{
+    return interval(ival.min + offset, ival.max + offset);
+}
+
 #endif

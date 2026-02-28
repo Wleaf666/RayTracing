@@ -14,7 +14,7 @@ class camera{
         vec3 vup=vec3(0, 1, 0);
         double aspect_ratio = 16.0/9;
         int image_width = 1600;
-        int image_height = 909;
+        int image_height = 900;
         int max_depth = 50;
         int samples_per_pixel = 80;
         double apetrure = 0.1;
@@ -86,6 +86,7 @@ class camera{
         {
             origin = lookfrom;
             lens_radius = apetrure / 2;
+            image_height = image_width * aspect_ratio;
 
             double theta = degrees_to_radians(vfov);
             double half_height = tan(theta / 2);
